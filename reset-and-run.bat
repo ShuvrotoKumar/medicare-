@@ -1,0 +1,16 @@
+@echo off
+echo Removing node_modules and package-lock.json...
+rmdir /s /q node_modules
+if exist package-lock.json del package-lock.json
+
+echo Cleaning npm cache...
+npm cache clean --force
+
+echo Installing dependencies...
+call npm install
+
+echo Building the project...
+call npm run build
+
+echo Starting development server...
+call npm run dev
