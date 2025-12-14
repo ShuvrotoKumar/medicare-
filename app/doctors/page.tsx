@@ -17,6 +17,11 @@ const specialties = [
   'Dermatology'
 ];
 
+interface Appointment {
+  date: string;
+  time: string;
+}
+
 interface Doctor {
   id: number;
   name: string;
@@ -146,6 +151,7 @@ export default function DoctorsPage() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [appointment, setAppointment] = useState<Appointment>({ date: '', time: '' });
+  const [reason, setReason] = useState('');
 
   const filteredDoctors = doctors.filter((doctor: Doctor) => {
     const matchesSpecialty = selectedSpecialty === 'All Specialties' || 
@@ -164,10 +170,13 @@ export default function DoctorsPage() {
 
   const handleSubmitAppointment = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!selectedDoctor) return; // Add null check
+    
     // Here you would typically send the appointment request to your backend
     alert(`Appointment booked with ${selectedDoctor.name} on ${appointment.date} at ${appointment.time}`);
     setShowModal(false);
     setAppointment({ date: '', time: '' });
+    setReason('');
   };
 
   const renderStars = (rating: number) => {
@@ -225,8 +234,8 @@ export default function DoctorsPage() {
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
               >
                 {specialties.map((specialty) => (
-                  <option key={specialty.name} value={specialty.name}>
-                    {specialty.name}
+                  <option key={specialty} value={specialty}>
+                    {specialty}
                   </option>
                 ))}
               </select>
@@ -346,8 +355,8 @@ export default function DoctorsPage() {
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={appointmentDate}
-                        onChange={(e) => setAppointmentDate(e.target.value)}
+                        value={appointment.date}
+                        onChange={(e) => setAppointment(prev => ({ ...prev, date: e.target.value }))}
                         required
                       />
                     </div>
@@ -357,8 +366,8 @@ export default function DoctorsPage() {
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={appointmentTime}
-                        onChange={(e) => setAppointmentTime(e.target.value)}
+                        value={appointment.time}
+                        onChange={(e) => setAppointment(prev => ({ ...prev, time: e.target.value }))}
                         required
                       >
                         <option value="">Select a time</option>
@@ -378,6 +387,8 @@ export default function DoctorsPage() {
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Please describe the reason for your visit..."
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
                         required
                       ></textarea>
                     </div>
