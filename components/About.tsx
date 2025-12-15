@@ -16,7 +16,7 @@ const About = () => {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-blue-600/10 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-blue-600/10 mix-blend-multiply transition duration-500 transform hover:scale-110"></div>
             </div>
           </div>
           

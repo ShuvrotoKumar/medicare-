@@ -4,8 +4,20 @@ import Link from 'next/link';
 
 const Hero = () => {
   return (
-    <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
+    <section className="relative text-white h-[70vh] flex items-center overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 w-full h-full">
+        <Image
+          src="/images/hero-bg.jpg"
+          alt="Healthcare background"
+          fill
+          className="object-cover"
+          priority
+          quality={100}
+        />
+        <div className="absolute inset-0"></div>
+      </div>
+      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center relative z-10">
         <div className="md:w-1/2 mb-10 md:mb-0">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Your Health is Our Top Priority
@@ -20,18 +32,6 @@ const Hero = () => {
             <button className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 font-semibold py-3 px-6 rounded-lg transition duration-300">
               Learn More
             </button>
-          </div>
-        </div>
-        <div className="md:w-1/2 flex justify-center">
-          <div className="relative w-full max-w-lg h-80 rounded-lg overflow-hidden shadow-2xl">
-            <Image
-              src="/images/m1.jpg"
-              alt="Professional healthcare provider"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-blue-600/10 mix-blend-multiply"></div>
           </div>
         </div>
       </div>

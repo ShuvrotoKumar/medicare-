@@ -1,4 +1,13 @@
+'use client';
+
 import React from 'react';
+import { motion, Variants, useInView } from 'framer-motion';
+
+interface Service {
+  title: string;
+  description: string;
+  icon: string;
+}
 
 const services = [
   {
@@ -33,6 +42,49 @@ const services = [
   }
 ];
 
+interface ServiceCardProps {
+  service: Service;
+  index: number;
+}
+
+const ServiceCard = ({ service, index }: ServiceCardProps) => {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
+
+  const variants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={variants}
+      className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+    >
+      <div className="text-4xl mb-4 transform hover:scale-110 transition-transform duration-300">
+        {service.icon}
+      </div>
+      <h3 className="text-xl font-semibold text-gray-800 mb-2">
+        {service.title}
+      </h3>
+      <p className="text-gray-600">
+        {service.description}
+      </p>
+    </motion.div>
+  );
+};
+
 const Services = () => {
   return (
     <section className="py-20 bg-gray-50">
@@ -50,18 +102,7 @@ const Services = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div 
-              key={index}
-              className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <div className="text-4xl mb-4">{service.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                {service.title}
-              </h3>
-              <p className="text-gray-600">
-                {service.description}
-              </p>
-            </div>
+            <ServiceCard key={index} service={service} index={index} />
           ))}
         </div>
         

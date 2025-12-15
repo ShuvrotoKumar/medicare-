@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect, useRef } from 'react';
 import { FaSearch, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaLinkedinIn, FaStar, FaRegStar } from 'react-icons/fa';
 import Image from 'next/image';
 import Header from '@/components/Header';
@@ -163,14 +163,14 @@ export default function DoctorsPage() {
     return matchesSpecialty && matchesSearch;
   });
 
-  const handleBookAppointment = (doctor: Doctor) => {
+  const handleBookAppointment = (doctor: Doctor): void => {
     setSelectedDoctor(doctor);
     setShowModal(true);
   };
 
-  const handleSubmitAppointment = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmitAppointment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!selectedDoctor) return; // Add null check
+    if (!selectedDoctor) return;
     
     // Here you would typically send the appointment request to your backend
     alert(`Appointment booked with ${selectedDoctor.name} on ${appointment.date} at ${appointment.time}`);
@@ -180,7 +180,7 @@ export default function DoctorsPage() {
   };
 
   const renderStars = (rating: number) => {
-    const stars = [];
+    const stars: JSX.Element[] = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     
@@ -197,8 +197,55 @@ export default function DoctorsPage() {
     return stars;
   };
 
+  const doctorCardsRef = useRef<Record<number, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    const currentRefs = Object.values(doctorCardsRef.current).filter(Boolean) as HTMLDivElement[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).classList.add('animate-fadeInUp');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    currentRefs.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      currentRefs.forEach((el) => {
+        if (el) observer.unobserve(el);
+      });
+    };
+  }, [filteredDoctors]);
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <style jsx global>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .doctor-card {
+          opacity: 0;
+        }
+      `}</style>
       <Header />
       
       {/* Hero Section */}
@@ -245,7 +292,18 @@ export default function DoctorsPage() {
           {/* Doctors Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredDoctors.map((doctor) => (
-              <div key={doctor.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+              <div 
+                key={doctor.id} 
+                ref={el => {
+                  if (el) {
+                    doctorCardsRef.current[doctor.id] = el;
+                  } else {
+                    delete doctorCardsRef.current[doctor.id];
+                  }
+                }}
+                className="doctor-card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                style={{ animationDelay: `${doctor.id * 0.1}s` }}
+              >
                 <div className="relative h-64 w-full">
                   <Image
                     src={doctor.image}

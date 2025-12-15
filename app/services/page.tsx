@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
-import { FaStethoscope, FaHeartbeat, FaTooth, FaBrain, FaBone, FaEye, FaLungs, FaProcedures, FaUserMd, FaClinicMedical, FaMicroscope, FaSyringe } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { motion, useInView, useAnimation } from 'framer-motion';
+import { FaStethoscope, FaHeartbeat, FaTooth, FaBrain, FaBone, FaEye, FaLungs, FaProcedures, FaUserMd, FaClinicMedical, FaMicroscope, FaSyringe, FaArrowDown } from 'react-icons/fa';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+
 const services = [
   {
     id: 1,
@@ -131,52 +133,131 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-        <Header />
+      <Header />
       {/* Hero Section */}
-      <div className="bg-blue-700 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Medical Services</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Comprehensive healthcare services designed to meet all your medical needs with compassion and excellence.
-          </p>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-blue-700 text-white py-20 relative overflow-hidden"
+      >
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900"></div>
         </div>
-      </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <motion.h1 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl md:text-5xl font-bold mb-4"
+          >
+            Our Medical Services
+          </motion.h1>
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-xl text-blue-100 max-w-3xl mx-auto mb-8"
+          >
+            Comprehensive healthcare services designed to meet all your medical needs with compassion and excellence.
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 animate-bounce"
+          >
+            <FaArrowDown className="w-8 h-8 mx-auto text-blue-200" />
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* Features Section */}
-      <div className="py-12 bg-white">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-16 bg-white"
+      >
         <div className="container mx-auto px-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+            <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              We are committed to providing exceptional healthcare with the latest technology and experienced professionals.
+            </p>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="flex flex-col items-center text-center p-6 rounded-lg hover:shadow-lg transition-shadow">
+              <motion.div 
+                key={index} 
+                className="flex flex-col items-center text-center p-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
                 <div className="bg-blue-100 p-4 rounded-full mb-4">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Services Grid */}
-      <div className="py-16">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-16 bg-gray-50"
+      >
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Specialized Services</h2>
             <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
             <p className="text-gray-600 max-w-3xl mx-auto">
               We offer a wide range of specialized medical services to meet your healthcare needs. 
               Our team of experts is dedicated to providing the highest quality care.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <div 
+            {services.map((service, index) => (
+              <motion.div 
                 key={service.id}
-                className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${service.bgColor}`}
+                className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${service.bgColor} hover:shadow-xl`}
                 onClick={() => toggleCard(service.id)}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.1 * (index % 3) + Math.floor(index / 3) * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -5,
+                  transition: { duration: 0.2 }
+                }}
               >
                 <div className="p-8 cursor-pointer">
                   <div className="flex flex-col items-center text-center">
@@ -214,14 +295,20 @@ export default function ServicesPage() {
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* CTA Section */}
-      <div className="bg-blue-700 text-white py-16">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="bg-blue-700 text-white py-16"
+      >
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Need Help With Your Health?</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
@@ -236,7 +323,7 @@ export default function ServicesPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   );

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { FaStar, FaRegStar, FaQuoteLeft, FaFilter, FaUserMd, FaProcedures, FaHospital } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -92,6 +93,7 @@ const TestimonialsPage = () => {
     content: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredTestimonials = filter === 'all' 
     ? testimonials 
@@ -157,8 +159,13 @@ const TestimonialsPage = () => {
         </div>
       </div>
 
-      <div className="py-16">
-        <div className="container mx-auto px-4">
+      <motion.div 
+        className="py-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="container mx-auto px-4" ref={containerRef}>
           {/* Filter Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <button
@@ -190,14 +197,31 @@ const TestimonialsPage = () => {
           {/* Testimonials Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             <AnimatePresence>
-              {filteredTestimonials.map((testimonial) => (
+              {filteredTestimonials.map((testimonial, index) => {
+                const cardRef = useRef<HTMLDivElement>(null);
+                const isInView = useInView(cardRef, { once: true, amount: 0.1, root: containerRef });
+                
+                return (
                 <motion.div
                   key={testimonial.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  ref={cardRef}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  animate={isInView ? { 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1,
+                    transition: { 
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      ease: [0.16, 0.77, 0.47, 0.97]
+                    } 
+                  } : {}}
+                  whileHover={{ 
+                    y: -5,
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    transition: { duration: 0.2 }
+                  }}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300"
                 >
                   <div className="p-6">
                     <div className="flex items-center mb-4">
@@ -239,7 +263,8 @@ const TestimonialsPage = () => {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              );
+            })}
             </AnimatePresence>
           </div>
 
@@ -354,7 +379,7 @@ const TestimonialsPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       
       <Footer />
     </div>
