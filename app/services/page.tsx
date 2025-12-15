@@ -315,9 +315,9 @@ export default function ServicesPage() {
             Our team of healthcare professionals is here to provide you with personalized care and treatment options.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition-colors">
+            <Link href='/book' className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition-colors">
               Book an Appointment
-            </button>
+            </Link>
             <Link href='/contact' className="border-2 border-white text-white hover:bg-blue-800 font-semibold py-3 px-8 rounded-full transition-colors">
               Contact Us
             </Link>

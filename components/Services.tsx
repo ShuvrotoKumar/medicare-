@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion, Variants, useInView } from 'framer-motion';
+import Link from 'next/link';
 
 interface Service {
   title: string;
@@ -107,9 +108,9 @@ const Services = () => {
         </div>
         
         <div className="text-center mt-12">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
+          <Link href="/services" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
             View All Services
-          </button>
+          </Link>
         </div>
       </div>
     </section>

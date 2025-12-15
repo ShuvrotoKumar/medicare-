@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { FaStar, FaRegStar, FaQuoteLeft, FaFilter, FaUserMd, FaProcedures, FaHospital } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useRef } from 'react';
@@ -83,7 +83,10 @@ const testimonials: Testimonial[] = [
 ];
 
 const TestimonialsPage = () => {
-  const [filter, setFilter] = useState<'all' | 'doctors' | 'services' | 'facility'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'doctors' | 'services' | 'facility'>('all');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [testimonialRefs, setTestimonialRefs] = useState<Array<HTMLElement | null>>([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -95,9 +98,40 @@ const TestimonialsPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const filteredTestimonials = filter === 'all' 
-    ? testimonials 
-    : testimonials.filter(testimonial => testimonial.category === filter);
+  // Set isMounted to true on component mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Create refs for each testimonial
+  useEffect(() => {
+    setTestimonialRefs((elRefs) => 
+      Array(testimonials.length)
+        .fill(null)
+        .map((_, i) => elRefs[i] || null)
+    );
+  }, [testimonials.length]);
+
+  // Filter testimonials based on active filter using useMemo
+  const filteredTestimonials = useMemo(() => {
+    return activeFilter === 'all' 
+      ? testimonials 
+      : testimonials.filter(testimonial => testimonial.category === activeFilter);
+  }, [activeFilter]);
+
+  // Handle filter change
+  const handleFilterChange = (filter: 'all' | 'doctors' | 'services' | 'facility') => {
+    setIsLoading(true);
+    setActiveFilter(filter);
+    
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+
+    // Cleanup
+    return () => clearTimeout(timer);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,6 +179,38 @@ const TestimonialsPage = () => {
     }
   };
 
+  // Set up intersection observer for animations
+  useEffect(() => {
+    if (!isMounted || typeof window === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fadeInUp');
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    // Only observe if we're on the client side
+    const currentRefs = testimonialRefs;
+    currentRefs.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    // Cleanup function
+    return () => {
+      currentRefs.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, [isMounted, testimonialRefs, activeFilter]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -169,26 +235,26 @@ const TestimonialsPage = () => {
           {/* Filter Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <button
-              onClick={() => setFilter('all')}
-              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              onClick={() => handleFilterChange('all')}
+              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
             >
               <FaFilter className="mr-2" /> All Testimonials
             </button>
             <button
-              onClick={() => setFilter('doctors')}
-              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === 'doctors' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              onClick={() => handleFilterChange('doctors')}
+              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'doctors' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
             >
               <FaUserMd className="mr-2" /> Doctors
             </button>
             <button
-              onClick={() => setFilter('services')}
-              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === 'services' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              onClick={() => handleFilterChange('services')}
+              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'services' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
             >
               <FaProcedures className="mr-2" /> Services
             </button>
             <button
-              onClick={() => setFilter('facility')}
-              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === 'facility' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              onClick={() => handleFilterChange('facility')}
+              className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeFilter === 'facility' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
             >
               <FaHospital className="mr-2" /> Facility
             </button>

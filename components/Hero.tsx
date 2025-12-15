@@ -29,9 +29,9 @@ const Hero = () => {
             <Link href='/book' className="bg-white text-blue-700 hover:bg-blue-100 font-semibold py-3 px-6 rounded-lg transition duration-300">
               Book an Appointment
             </Link>
-            <button className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 font-semibold py-3 px-6 rounded-lg transition duration-300">
+            <Link href='/about' className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 font-semibold py-3 px-6 rounded-lg transition duration-300">
               Learn More
-            </button>
+            </Link>
           </div>
         </div>
       </div>

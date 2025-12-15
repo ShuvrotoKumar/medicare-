@@ -91,7 +91,7 @@ const ContactPage = () => {
       icon: <FaClock className="text-blue-500 text-2xl" />,
       title: 'Opening Hours',
       description: 'Monday - Friday: 8:00 AM - 6:00 PM\nSaturday: 9:00 AM - 3:00 PM',
-      link: '/appointment',
+      link: '/book',
       linkText: 'Book Appointment'
     }
   ];
