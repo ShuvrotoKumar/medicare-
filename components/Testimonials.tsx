@@ -18,7 +18,7 @@ type Testimonial = {
   content: string;
   rating: number;
   image: string;
-  category: 'doctor' | 'service' | 'facility';
+ 
 };
 
 const testimonials: Testimonial[] = [
@@ -29,60 +29,28 @@ const testimonials: Testimonial[] = [
     content: 'The care I received was exceptional. The doctors took their time to explain everything and made me feel comfortable throughout my treatment.',
     rating: 5,
     image: '/images/d1.jpg',
-    category: 'doctor'
-  },
-  {
-    id: 2,
+      },
+      {
+        id: 2,
     name: 'Maria G.',
     role: 'Patient',
     content: 'Professional staff and clean facilities. I was seen right at my appointment time and the service was very thorough.',
     rating: 5,
     image: '/images/d2.jpg',
-    category: 'service'
+    
   },
   {
-    id: 3,
+      id: 3,
     name: 'Robert T.',
     role: 'Patient',
     content: 'The hospital facilities are top-notch. Clean, modern, and well-equipped. Made my recovery much more comfortable.',
     rating: 4,
     image: '/images/d3.jpg',
-    category: 'facility'
-  },
-  {
-    id: 4,
-    name: 'Dr. Michael Chen',
-    role: 'Neurologist',
-    content: 'Expert care and attention to detail. The doctors here are truly knowledgeable and caring.',
-    rating: 5,
-    image: '/images/d1.jpg',
-    category: 'doctor'
-  },
-  {
-    id: 5,
-    name: 'Lisa M.',
-    role: 'Patient',
-    content: 'The emergency service was quick and efficient. The staff was professional and caring throughout my visit.',
-    rating: 4,
-    image: '/images/d2.jpg',
-    category: 'service'
-  },
-  {
-    id: 6,
-    name: 'James W.',
-    role: 'Patient',
-    content: 'The hospital rooms are clean and comfortable. The facility is well-maintained and has a calming atmosphere.',
-    rating: 5,
-    image: '/images/d3.jpg',
-    category: 'facility'
+    
   }
 ];
 
 const Testimonials = () => {
-    type FilterType = 'all' | 'doctor' | 'service' | 'facility';
-  
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
-  const [showDoctors, setShowDoctors] = useState<boolean>(false);
   const [isClient, setIsClient] = useState(false);
 
   // Set isClient to true on component mount (client-side only)
@@ -90,15 +58,8 @@ const Testimonials = () => {
     setIsClient(true);
   }, []);
 
-  const filteredTestimonials = useMemo(() => {
-    if (activeFilter === 'all') return testimonials;
-    return testimonials.filter(testimonial => testimonial.category === activeFilter);
-  }, [activeFilter]);
-
-  const handleFilterClick = (filter: FilterType) => {
-    setActiveFilter(filter);
-    setShowDoctors(filter === 'doctor');
-  };
+  // We'll use all testimonials
+  const filteredTestimonials = testimonials;
 
   return (
     <section className="py-20 bg-white">
@@ -112,53 +73,10 @@ const Testimonials = () => {
             Hear from our valued patients about their experiences at our medical center.
           </p>
           
-          {/* Category Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {[
-              { id: 'all', label: 'All Testimonials', icon: 'filter' },
-              { id: 'doctor', label: 'Doctors', icon: 'user' },
-              { id: 'service', label: 'Services', icon: 'bed' },
-              { id: 'facility', label: 'Facility', icon: 'building' }
-            ].map((filter) => (
-              <button
-                key={filter.id}
-                onClick={() => handleFilterClick(filter.id as FilterType)}
-                className={`flex items-center px-6 py-3 rounded-full text-sm font-medium transition-colors ${
-                  activeFilter === filter.id 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {filter.icon === 'user' && (
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                  </svg>
-                )}
-                {filter.icon === 'bed' && (
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                  </svg>
-                )}
-                {filter.icon === 'building' && (
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                  </svg>
-                )}
-                {filter.icon === 'filter' && (
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                  </svg>
-                )}
-                {filter.label}
-              </button>
-            ))}
-          </div>
         </div>
         
         <div className="mb-12">
-          {isClient && showDoctors ? (
-            <Doctors />
-          ) : (
+          {isClient && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {filteredTestimonials.length > 0 ? (
                 filteredTestimonials.map((testimonial) => (
@@ -222,7 +140,7 @@ const Testimonials = () => {
                 ))
               ) : (
                 <div className="col-span-3 text-center py-12">
-                  <p className="text-gray-500">No testimonials found for this category.</p>
+                  <p className="text-gray-500">No testimonials found.</p>
                 </div>
               )}
             </div>
