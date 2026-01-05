@@ -7,6 +7,7 @@ import { FaUserMd, FaHeartbeat, FaHospital, FaStethoscope, FaClinicMedical, FaMi
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // Animation variants
 const fadeInUp = {
@@ -109,6 +110,8 @@ const values = [
 ];
 
 export default function AboutPage() {
+  const router = useRouter();
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -425,6 +428,7 @@ export default function AboutPage() {
               className="bg-white text-blue-700 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full transition-colors"
               variants={fadeInUp}
               whileHover={{ scale: 1.05 }}
+              onClick={() => router.push('/book')}
             >
               Book an Appointment
             </motion.button>
@@ -432,6 +436,7 @@ export default function AboutPage() {
               className="border-2 border-white text-white hover:bg-blue-800 font-semibold py-3 px-8 rounded-full transition-colors"
               variants={fadeInUp}
               whileHover={{ scale: 1.05 }}
+              onClick={() => router.push('/contact')}
             >
               Contact Us
             </motion.button>
