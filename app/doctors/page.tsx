@@ -8,13 +8,13 @@ import Footer from '@/components/Footer';
 
 const specialties = [
   'All Specialties',
-  'Cardiology',
-  'Neurology',
-  'Dentistry',
-  'Ophthalmology',
-  'Orthopedics',
-  'Pediatrics',
-  'Dermatology'
+  'Cardiologist',
+  'Neurologist', 
+  'Dentist',
+  'Ophthalmologist',
+  'Orthopedic Surgeon',
+  'Pediatrician',
+  'Dermatologist'
 ];
 
 interface Appointment {
@@ -155,7 +155,7 @@ export default function DoctorsPage() {
 
   const filteredDoctors = doctors.filter((doctor: Doctor) => {
     const matchesSpecialty = selectedSpecialty === 'All Specialties' || 
-                           doctor.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase());
+                           doctor.specialty === selectedSpecialty;
     
     const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
