@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Medicare+',
   description: 'A modern medical website',
+   icons: {
+    icon: "/favicon.png",
+  }
 }
 
 export default function RootLayout({
